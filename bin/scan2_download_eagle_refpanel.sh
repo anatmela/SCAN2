@@ -7,6 +7,25 @@ if [ $# -ne 2 ]; then
     exit 1
 fi
 
+# Validate that path_to_reference.fasta points to an existing file
+if [ ! -f "$1" ]; then
+    echo "Error: path_to_reference.fasta '$1' does not exist or is not a file."
+    exit 1
+fi
+
+# Test that bcftools is available and can be opened without errors
+if ! command -v bcftools &> /dev/null 2>&1 ; then
+    echo "Error: bcftools is not installed or not in PATH"
+    exit 1
+fi
+
+# Verify bcftools can run without errors
+if  ! bcftools --version > /dev/null 2>&1 ; then
+    echo "Error: bcftools is reporting the following errors:"
+    echo -e "\t$(bcftools --version 2>&1)"
+    exit 1
+fi
+
 set -e -o pipefail
 
 chr=$2
