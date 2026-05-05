@@ -16,8 +16,8 @@ include: "snakefile.genotype"
 
 wildcard_constraints:
     chr='|'.join(str(x) for x in config['chrs']),
-    gatk_chunk="\d+",
-    gatk_mmq="\d+",
+    gatk_chunk='\\d+',
+    gatk_mmq='\\d+',
     phaser="shapeit|eagle"
 
 if config['gatk_vcf'] is not None:

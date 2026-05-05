@@ -2,8 +2,8 @@
 
 wildcard_constraints:
     chr='|'.join(str(x) for x in config['chrs']),
-    gatk_chunk="\d+",
-    gatk_mmq="\d+",
+    gatk_chunk='\\d+',
+    gatk_mmq='\\d+',
     phaser="shapeit|eagle",
     depth_method="gatkdocov|samtoolsdepth",
     muttype='snv|indel',
