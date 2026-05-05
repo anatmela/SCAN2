@@ -279,13 +279,13 @@ rule binned_counts_profile:
         # nearly identical (if not exactly identical) mappability as the forward
         # strand, but we do this anyway to exactly match the process.
         """
-        (echo "#chr start end count" | tr ' ' '\t' ;
+        (echo "#chr start end count" | tr ' ' '\\t' ;
          samtools view \
              -f 2 -F 3856 \
              --min-MQ 60 \
              {input.bam} \
              {params.chrs_as_regions} \
-         | awk 'BEGIN {{ OFS="\t"; }}{{ print $3, $4-1, $4, NR; }}'\
+         | awk 'BEGIN {{ OFS="\\t"; }}{{ print $3, $4-1, $4, NR; }}'\
          | bedtools intersect -sorted -c \
              -a {input.bins} \
              -b /dev/stdin \
