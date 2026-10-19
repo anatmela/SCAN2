@@ -728,7 +728,7 @@ def do_run(args):
         "--snakefile",  args.snakefile,
         "--configfile", a.config_path,
         "--directory", a.analysis_dir,
-        "--latency-wait", "30",
+        "--latency-wait", "120",
         "--rerun-incomplete",
         "--jobs", str(args.joblimit),
     ] + set_threads
@@ -767,7 +767,7 @@ def run_snakemake(snakemake_command, args, a):
                 if snakemake_version >= (8, 0):
                     # Snakemake 8+ uses executor plugins
                     snakemake_command += [
-                        '--executor', 'cluster-generic',
+                        '--executor', 'cluster-generic', "--latency-wait", "120",
                         '--cluster-generic-submit-cmd', cluster_cmd
                     ]
                 else:
@@ -796,7 +796,7 @@ def do_makepanel(args):
         "--snakefile",  args.snakefile,
         "--configfile", a.config_path,
         "--directory", a.analysis_dir,
-        "--latency-wait", "30",
+        "--latency-wait", "120",
         "--rerun-incomplete",
         "--jobs", str(args.joblimit),
         "--set-threads", "process_tab=" + str(args.n_cores)
@@ -812,7 +812,7 @@ def do_rescue(args):
         "--snakefile",  args.snakefile,
         "--configfile", a.config_path,
         "--directory", a.analysis_dir,
-        "--latency-wait", "30",
+        "--latency-wait", "120",
         "--rerun-incomplete",
         "--jobs", str(args.joblimit),
         "--set-threads", "mutsig_rescue=" + str(args.n_cores)
@@ -834,7 +834,7 @@ def do_permtool(args):
         "--snakefile",  args.snakefile,
         "--configfile", a.config_path,
         "--directory", a.analysis_dir,
-        "--latency-wait", "30",
+        "--latency-wait", "120",
         "--rerun-incomplete",
         "--jobs", str(args.joblimit)
     ] + set_threads
