@@ -14,6 +14,7 @@ rule gatk_scatter:
         "gatk/scatter_benchmark.mmq{gatk_mmq}.region_{analysis_region}.tsv"
     params:
         min_base_quality_score=config['min_base_quality_score']
+    threads: 4
     retries: 2
     resources:
         # Warning: mem_mb must be >2500 (and in reality at least double that) since
@@ -24,8 +25,19 @@ rule gatk_scatter:
         mem_mb=lambda wildcards, input, threads, attempt: 7000 + (attempt-1)*25000
     shell:
         """
+        echo "========== Job diagnostics =========="
+        echo "HOSTNAME=$(hostname)"
+        echo "PBS_JOBID=${{PBS_JOBID:-unset}}"
+        echo "OMP_NUM_THREADS=${{OMP_NUM_THREADS:-unset}}"
+        echo "NPROC=$(nproc)"
+        echo "PROCESS_AFFINITY=$(taskset -pc $$ 2>&1)"
+        grep -E 'Cpus_allowed|Cpus_allowed_list|Mems_allowed' /proc/self/status
+        echo "====================================="
+
         gatk HaplotypeCaller \
             --java-options "-Xmx$(({resources.mem_mb} - 2000))M" \
+            --native-pair-hmm-threads {threads} \
+            --pair-hmm-implementation AVX_LOGLESS_CACHING_OMP \
             --arguments_file {input.argfile} \
             --dont-use-soft-clipped-bases \
             --dbsnp {input.dbsnp} \
